@@ -35,43 +35,125 @@ Ao enviar, deve-se apresentar um alert javascript com sucesso, limpar todos os c
 do formulário e zerar a barra de progresso novamente.
 */
 
-function App() {
-  return (
-    <div className='App'>
-      <h3>desafio fernandev</h3>
-      <h1>progresso do formulário</h1>
+import { useState } from "react";
 
-      <main>
-        {/* crie a barra de progresso aqui */}
-        <div className='form-group'>
-          <label htmlFor=''>Nome Completo</label>
-          <input />
-        </div>
-        <div className='form-group'>
-          <label htmlFor=''>E-mail</label>
-          <input />
-        </div>
-        <div className='form-group'>
-          <label htmlFor=''>Estado Civil</label>
-          <select>
-            <option value=''>- selecione...</option>
-            <option value='solteiro'>Solteiro</option>
-            <option value='casado'>Casado</option>
-            <option value='divorciado'>Divorciado</option>
-          </select>
-        </div>
-        <div className='form-group'>
-          <label htmlFor=''>Gênero</label>
-          <div className='radios-container'>
-            <span>
-              <input type='radio' /> Masculino
-            </span>
-            <span>
-              <input type='radio' /> Feminino
-            </span>
+const regexNome =
+  /^[A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ][a-záéíóúâêîôûãõç]+ [A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ][a-záéíóúâêîôûãõç]+$/;
+const RegExEmail =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+function App() {
+  const [nome, setNome] = useState();
+  const [email, setEmail] = useState();
+  const [estadoC, setEstadoC] = useState();
+  const [genero, setGenero] = useState();
+
+  const validarNome = () => {
+    if (regexNome.test(nome) === true) {
+      console.log("nome ok");
+    } else {
+      return console.log("nome invalido");
+    }
+  };
+
+  const validarEmail = () => {
+    if (RegExEmail.test(email) === true) {
+      console.log("email ok");
+    } else {
+      return console.log("email invalido");
+    }
+  };
+
+  //console.log(validarNome())
+  //console.log(regexNome.test('Jose Silva'))
+
+  console.log(estadoC);
+  console.log(genero);
+
+  const enviarForm = (e) => {
+    e.preventDefault();
+
+     validarNome()
+     validarEmail()
+  };
+
+  return (
+    <div className="bg-gray-300 h-screen pt-10 px-40">
+      <main className="w-full flex flex-col	">
+        <h1 className="text-3xl text-black font-semibold	my-0 mx-auto">
+          Progresso do Cadastro
+        </h1>
+        <form onSubmit={enviarForm} className="p-8 bg-white rounded-xl mt-4">
+          <div className="flex flex-col my-4">
+            <label className="mb-1" htmlFor="nome">
+              Nome completo
+            </label>
+            <input
+              className="border-b-stone-300 border-solid border rounded-md pl-2"
+              name="nome"
+              type="text"
+              onChange={(e) => setNome(e.target.value)}
+            />
           </div>
-        </div>
-        <button>Enviar Formulário</button>
+
+          <div className="flex flex-col my-4">
+            <label className="mb-1" htmlFor="email">
+              E-mail
+            </label>
+            <input
+              className="border-b-stone-300 border-solid	border rounded-md pl-2"
+              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              type="email"
+            />
+          </div>
+
+          <div className="flex flex-col my-4">
+            <label>Estado Civil</label>
+            <select
+              onChange={(e) => setEstadoC(e.target.value)}
+              className="mb-1 border-b-stone-300 border-solid border rounded-md p-1"
+            >
+              <option value={""}>--Selecione--</option>
+              <option value={"Solteiro"}>Solteiro</option>
+              <option value={"Casado"}>Casado</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col my-4">
+            <span className="mb-1">Gênero</span>
+            <div className="flex gap-3">
+              <div className="flex gap-2 justify-center	items-center">
+                <input
+                  onChange={(e) => setGenero(e.target.value)}
+                  name="genero"
+                  type="radio"
+                />
+                <label id="masculino" htmlFor="masculino" value="masculino">
+                  Masculino
+                </label>
+              </div>
+
+              <div className="flex gap-2	items-center">
+                <input
+                  onChange={(e) => setGenero(e.target.value)}
+                  id="femino"
+                  name="genero"
+                  type="radio"
+                  value="feminino"
+                />
+                <label htmlFor="femino">Feminino</label>
+              </div>
+            </div>
+          </div>
+          <button
+            disabled
+            className="bg-gray-300 w-full rounded-md p-2 hover:bg-black ease-in duration-200 text-white"
+            type="submit"
+          >
+            Enviar Formulario
+          </button>
+        </form>
       </main>
     </div>
   );
