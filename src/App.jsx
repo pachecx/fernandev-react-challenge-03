@@ -50,19 +50,61 @@ function App() {
     genero: "",
   });
 
-  const handleChange = (e) => {
-    const { nome, value } = e.target;
+  const barProgresso = () => {
+    let value = 0;
+    const bar = 25;
 
-    setData((prev) => ({
-      ...prev,
-      [nome]: value,
-    }));
+    if (data.nome.length) {
+      if (regexNome.test(data.nome)) {
+        value += bar;
+      }
+    }
+
+    if (data.email.length > 2) {
+      if (RegExEmail.test(data.email)) {
+        value += bar;
+      }
+      value += bar;
+    }
+
+    if (data.estadoC.length) {
+      value += bar;
+    }
+
+    if (data.genero.length) {
+      value += bar;
+    }
+
+    console.log(value);
+    return value;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setData((prev) => {
+      const newData = { ...prev, [name]: value };
+
+      return newData;
+    });
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-  }
-  console.log(data);
+    e.preventDefault();
+
+    alert('Formulário enviado!')
+    console.log("submit");
+    setData({
+      nome: " ",
+      email: " ",
+      estadoC: "",
+      genero: "",
+    })
+    
+  };
+
+  barProgresso();
+
   return (
     <div className="bg-gray-300 h-screen pt-10 px-40">
       <main className="w-full flex flex-col	">
@@ -71,7 +113,10 @@ function App() {
         </h1>
         <form onSubmit={handleSubmit} className="p-8 bg-white rounded-xl mt-4">
           <div className="h-6 w-full border-b-stone-300 border-solid border rounded-md ">
-            <div className={`h-full bg-green-400 w-[25%]`} />
+            <div
+              className={`h-full`}
+              style={{ background: "green", width: `${barProgresso()}%` }}
+            />
           </div>
 
           <div className="flex flex-col my-4">
@@ -81,7 +126,6 @@ function App() {
             <input
               value={data.nome}
               onChange={handleChange}
-
               className="border-b-stone-300 border-solid border rounded-md pl-2"
               name="nome"
               type="text"
@@ -93,6 +137,7 @@ function App() {
               E-mail
             </label>
             <input
+              value={data.email}
               onChange={handleChange}
               className="border-b-stone-300 border-solid	border rounded-md pl-2"
               name="email"
@@ -102,7 +147,12 @@ function App() {
 
           <div className="flex flex-col my-4">
             <label>Estado Civil</label>
-            <select className="mb-1 border-b-stone-300 border-solid border rounded-md p-1">
+            <select
+              className="mb-1 border-b-stone-300 border-solid border rounded-md p-1"
+              onChange={handleChange}
+              value={data.estadoC}
+              name="estadoC"
+            >
               <option value={""}>--Selecione--</option>
               <option value={"Solteiro"}>Solteiro</option>
               <option value={"Casado"}>Casado</option>
@@ -113,7 +163,12 @@ function App() {
             <span className="mb-1">Gênero</span>
             <div className="flex gap-3">
               <div className="flex gap-2 justify-center	items-center">
-                <input name="genero" type="radio" />
+                <input
+                  onChange={handleChange}
+                  name="genero"
+                  type="radio"
+                  value="masculino"
+                />
                 <label id="masculino" htmlFor="masculino" value="masculino">
                   Masculino
                 </label>
@@ -121,6 +176,7 @@ function App() {
 
               <div className="flex gap-2	items-center">
                 <input
+                  onChange={handleChange}
                   id="femino"
                   name="genero"
                   type="radio"
@@ -132,7 +188,8 @@ function App() {
           </div>
 
           <button
-            className="bg-gray-300 w-full rounded-md p-2 hover:bg-black ease-in duration-200 text-white"
+            disabled={barProgresso() !== 100}
+            className="bg-gray-300 w-full rounded-md p-2 "
             type="submit"
           >
             Enviar Formulario
